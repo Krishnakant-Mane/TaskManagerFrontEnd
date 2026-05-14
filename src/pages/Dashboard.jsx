@@ -30,7 +30,7 @@ const Dashboard = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get(`${VITE_API_BASE}/api/tasks/get-tasks`, {
+            const response = await axios.get(`${VITE_API_BASE}/api/notes/get-notes`, {
                 headers: { 'user-id': userId }
             });
             setTasks(response.data);
@@ -55,11 +55,11 @@ const Dashboard = () => {
         }
 
         try {
-            await axios.post(`${VITE_API_BASE}/api/tasks/create-task`,
+            await axios.post(`${VITE_API_BASE}/api/notes/create-note`,
                 { title, content },
                 { headers: { 'user-id': userId } }
             );
-            toast.success("Task added successfully!");
+            toast.success("Note added successfully!");
             setTitle('');
             setContent('');
             fetchTasks();
@@ -76,7 +76,7 @@ const Dashboard = () => {
     const confirmDeleteTask = async () => {
         if (!taskToDelete) return;
         try {
-            await axios.delete(`${VITE_API_BASE}/api/tasks/delete-task/${taskToDelete}`, {
+            await axios.delete(`${VITE_API_BASE}/api/notes/delete-note/${taskToDelete}`, {
                 headers: { 'user-id': userId }
             });
             toast.success("Task deleted!");

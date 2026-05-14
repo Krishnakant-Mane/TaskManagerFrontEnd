@@ -28,7 +28,7 @@ const ViewAndUpdate = ({ isOpen, onClose, task, onUpdateSuccess }) => {
     const onSubmit = async (data) => {
         try {
             const userId = localStorage.getItem('userId');
-            await axios.put(`${VITE_API_BASE}/api/tasks/update-task/${task.task_id}`, {
+            await axios.put(`${VITE_API_BASE}/api/notes/update-note/${task.task_id}`, {
                 title: data.title,
                 content: data.description
             }, {
