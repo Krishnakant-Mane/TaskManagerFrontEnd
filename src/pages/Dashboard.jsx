@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import ViewAndUpdate from '../components/ViewAndUpdate';
+import WarningNote from '../components/WarningNote';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -12,6 +13,8 @@ const Dashboard = () => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null);
 
     // New task form state
     const [title, setTitle] = useState('');
@@ -65,12 +68,20 @@ const Dashboard = () => {
         }
     };
 
-    const handleDeleteTask = async (taskId) => {
+    const handleDeleteClick = (taskId) => {
+        setTaskToDelete(taskId);
+        setIsWarningModalOpen(true);
+    };
+
+    const confirmDeleteTask = async () => {
+        if (!taskToDelete) return;
         try {
-            await axios.delete(`${VITE_API_BASE}/api/tasks/delete-task/${taskId}`, {
+            await axios.delete(`${VITE_API_BASE}/api/tasks/delete-task/${taskToDelete}`, {
                 headers: { 'user-id': userId }
             });
             toast.success("Task deleted!");
+            setIsWarningModalOpen(false);
+            setTaskToDelete(null);
             fetchTasks();
         } catch (error) {
             console.log(error);
@@ -220,7 +231,7 @@ const Dashboard = () => {
 
                                         <div className="absolute right-4 top-4 flex flex-col gap-3 text-[#9ca3af]">
                                             <button onClick={() => handleEditClick(task)} className="hover:text-[#4b5563] transition-colors"><Pencil size={14} /></button>
-                                            <button onClick={() => handleDeleteTask(task.task_id)} className="hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
+                                            <button onClick={() => handleDeleteClick(task.task_id)} className="hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
                                         </div>
 
                                         <h3 className="text-2xl text-[#232b38] mb-1.5 pr-8" style={{ fontFamily: '"Caveat", cursive', fontWeight: 700 }}>
@@ -256,6 +267,12 @@ const Dashboard = () => {
                 onClose={() => setIsUpdateModalOpen(false)}
                 task={selectedTask}
                 onUpdateSuccess={fetchTasks}
+            />
+
+            <WarningNote 
+                isOpen={isWarningModalOpen}
+                onClose={() => setIsWarningModalOpen(false)}
+                onConfirm={confirmDeleteTask}
             />
         </div>
     );
