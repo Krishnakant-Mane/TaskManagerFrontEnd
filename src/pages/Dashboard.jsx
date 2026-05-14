@@ -73,6 +73,7 @@ const Dashboard = () => {
             toast.success("Task deleted!");
             fetchTasks();
         } catch (error) {
+            console.log(error);
             toast.error("Failed to delete task.");
         }
     };

@@ -23,10 +23,12 @@ const ViewAndUpdate = ({ isOpen, onClose, task, onUpdateSuccess }) => {
 
     if (!isOpen) return null;
 
+    const VITE_API_BASE = import.meta.env.VITE_API_BASE;
+
     const onSubmit = async (data) => {
         try {
             const userId = localStorage.getItem('userId');
-            await axios.put(`http://localhost:5000/api/tasks/update-task/${task.task_id}`, {
+            await axios.put(`${VITE_API_BASE}/api/tasks/update-task/${task.task_id}`, {
                 title: data.title,
                 content: data.description
             }, {
